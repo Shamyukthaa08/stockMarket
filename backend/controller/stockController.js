@@ -96,6 +96,48 @@ const getStock = async (req, res) => {
     }
 };
 
+
+
+const getCurrentPrice = async (req, res) => {
+    try {
+        const { symbol } = req.body;
+
+        // Check if the symbol is provided
+        if (!symbol) {
+            return res.status(400).json({ error: "Stock symbol is required" });
+        }
+
+        // Fetch stock data from Twelve Data API
+        const response = await axios.get(`https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&apikey=e88c169afaba46fc9ff59ad851bd2419`);
+
+        // Check if the response contains data
+        if (!response.data || !response.data.values) {
+            return res.status(400).json({ error: "Stock data not found" });
+        }
+
+        // Extract the latest stock price
+        const latestData = response.data.values[0];
+        const currentPrice = latestData.close;
+
+        // Send the current price in the response
+        return res.status(200).json({ symbol, currentPrice });
+
+    } catch (err) {
+        console.error(err);
+
+        // Handle specific errors
+        if (err.response) {
+            return res.status(err.response.status).json({ error: "Error fetching stock data from API" });
+        } else if (err.request) {
+            return res.status(500).json({ error: "No response received from the API" });
+        } else {
+            return res.status(500).json({ error: "Error fetching stock data" });
+        }
+    }
+};
+
+
+
 const myStock = async(req,res)=>{
     const userId = req.userId;
     try{
@@ -214,5 +256,7 @@ module.exports =  {
     getStock,
     buyStock,
     sellStock,
+    getCurrentPrice,
     myStock
+    
 }

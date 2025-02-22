@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+    const navigate = useNavigate();
     let links =[
-        {name:"DASHBOARD", link:"/"},
+        {name:"Profile", link:"/profile"},
         {name:"TRADE", link:"/"},
         {name:"SERVICE", link:"/"},
         {name:"ABOUT", link:"/"}

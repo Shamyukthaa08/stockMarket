@@ -1,6 +1,7 @@
 import useAuth from '../../hooks/useAuth';
 import axios from 'axios';
 import Stock from './Stock';
+import Navbar from '../Navbar';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -23,6 +24,7 @@ const Dashboard = () => {
 
   return (
     <>
+    <Navbar/>
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Welcome, {user.name}!</h1>
       <p className="text-lg mb-4">Email: {user.email}</p>

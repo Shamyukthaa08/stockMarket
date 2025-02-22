@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
 import Dashboard from './pages/user/Dashboard';
-// import Profile from './pages/Profile'; // Add this component
+import Profile from './pages/user/Profile' // Add this component
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/profile" element={<Profile />} /> Protected route */}
+             <Route path="/profile" element={<Profile />} /> 
           </Route>
         </Routes>
       </BrowserRouter>
