@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema ({
         default:false
     },
     virtualBalance:{
-        type:String,
+        type:Number,
         default:100000
     },
 

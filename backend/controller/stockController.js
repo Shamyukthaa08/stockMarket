@@ -106,9 +106,10 @@ const getCurrentPrice = async (req, res) => {
         if (!symbol) {
             return res.status(400).json({ error: "Stock symbol is required" });
         }
-
+//24ce2fb2bb1348baaa49e691bae16a81
+//e88c169afaba46fc9ff59ad851bd2419
         // Fetch stock data from Twelve Data API
-        const response = await axios.get(`https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&apikey=e88c169afaba46fc9ff59ad851bd2419`);
+        const response = await axios.get(`https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&apikey=24ce2fb2bb1348baaa49e691bae16a81`);
 
         // Check if the response contains data
         if (!response.data || !response.data.values) {
@@ -177,7 +178,9 @@ const buyStock = async (req, res) => {
         }
 
         // Deduct the amount from user's balance
-        user.virtualBalance -= totalCost;
+        
+        let balance = user.virtualBalance - totalCost;
+        user.virtualBalance = balance
         await user.save();
 
         let transactionStock = await Transaction.findOne({ userId, symbol });

@@ -23,15 +23,15 @@ const PortfolioGraph = ({ portfolio }) => {
                     {
                         label: 'Purchase Price',
                         data: portfolio.map((stock) => stock.purchasePrice),
-                        backgroundColor: 'rgb(114, 75, 192)', 
-                        borderColor: 'rgba(95,136,241,255)',
+                        backgroundColor: 'rgb(179, 141, 255)', 
+                        borderColor: 'rgb(123, 62, 244)',
                         borderWidth: 1,
                     },
                     {
                         label: 'Current Price',
                         data: portfolio.map((stock) => stock.currentPrice),
-                        backgroundColor: 'rgba(235, 54, 145, 0.6)', 
-                        borderColor: 'rgba(255,168,200,255)',
+                        backgroundColor: 'rgb(250, 153, 193)', 
+                        borderColor: 'rgb(255, 72, 148)',
                         borderWidth: 1,
                     },
                     {

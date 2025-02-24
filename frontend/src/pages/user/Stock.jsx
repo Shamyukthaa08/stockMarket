@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 
-const Stock = () => {
+const Stock = ({user}) => {
     const [symbol, setSymbol] = useState("");
     const [data, setData] = useState(null);
     const [quantity, setQuantity] = useState(1); // State for quantity selection
     const [message, setMessage] = useState(""); // State for success/error messages
     const [portfolio, setPortfolio] = useState([]); // State for user's stock portfolio
     const [balance, setBalance] = useState(0); // State for user's virtual balance
+// Use the custom hook
 
     const stockSymbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"]; // Example stock symbols
 
@@ -139,7 +141,7 @@ const Stock = () => {
             {/* User's Stock Portfolio */}
             <div>
                 <h2>Your Portfolio</h2>
-                <p>💰 <b>Virtual Balance:</b> ${balance}</p>
+                <p>💰 <b>Virtual Balance:</b> ${user.virtualBalance}</p>
                 {portfolio.length > 0 ? (
                     <table>
                         <thead>

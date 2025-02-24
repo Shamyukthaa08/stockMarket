@@ -35,7 +35,7 @@ const Dashboard = () => {
         Logout
       </button>
       
-      <Stock/>
+      <Stock user={user}/>
     </div>
     </>
   );
