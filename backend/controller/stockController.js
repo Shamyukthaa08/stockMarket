@@ -60,42 +60,64 @@ const getStock = async (req, res) => {
 
         console.log(`Fetching stock data for: ${symbol}`);
 
-        const quoteUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=MWB3HWX2NR0Y49T5`;
-        const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=MWB3HWX2NR0Y49T5`;
+        const dailyUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${STOCK_API_KEY}`;
+        const overviewUrl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${STOCK_API_KEY}`;
 
-        const [quoteResponse, overviewResponse] = await Promise.all([
-            axios.get(quoteUrl),
+        const [dailyResponse, overviewResponse] = await Promise.all([
+            axios.get(dailyUrl),
             axios.get(overviewUrl)
         ]);
 
-        console.log("Quote Response:", quoteResponse.data);
+        console.log("Daily Response:", dailyResponse.data);
         console.log("Overview Response:", overviewResponse.data);
 
-        const quoteData = quoteResponse.data["Global Quote"];
+        const dailyData = dailyResponse.data["Time Series (Daily)"];
         const overviewData = overviewResponse.data;
 
-        if (!quoteData || Object.keys(quoteData).length === 0) {
+        if (!dailyData || Object.keys(dailyData).length === 0) {
             return res.status(400).json({ error: "Invalid stock symbol or Alpha Vantage rate limit exceeded" });
         }
 
+        const latestDate = Object.keys(dailyData)[0];
+        const latestData = dailyData[latestDate];
+        const closePrice = parseFloat(latestData["4. close"]);
+
+        // Estimate bid and ask prices
+        const bidPrice = (closePrice * 0.995).toFixed(2); // 0.5% lower than close
+        const askPrice = (closePrice * 1.005).toFixed(2); // 0.5% higher than close
+
+        // Extract additional fields from overviewData
+        const exchange = overviewData.Exchange || "N/A";
+        const currency = overviewData.Currency || "N/A";
+        const country = overviewData.Country || "N/A";
+        const name = overviewData.Name || "N/A";
+        const dividendPerShare = overviewData.DividendPerShare || "N/A";
+
         res.json({
             symbol,
-            currentPrice: quoteData["05. price"] || "N/A",
-            dailyChange: quoteData["09. change"] || "N/A",
-            dailyChangePercent: quoteData["10. change percent"] || "N/A",
-            bidPrice: quoteData["08. bid price"] || "N/A",
-            askPrice: quoteData["07. ask price"] || "N/A",
+            name,
+            currentPrice: closePrice || "N/A",
+            dailyChange: (closePrice - latestData["1. open"]).toFixed(2) || "N/A",
+            dailyChangePercent: (((closePrice - latestData["1. open"]) / latestData["1. open"] * 100).toFixed(2)) + "%" || "N/A",
+            bidPrice,
+            askPrice,
             high52Week: overviewData["52WeekHigh"] || "N/A",
             low52Week: overviewData["52WeekLow"] || "N/A",
             peRatio: overviewData["PERatio"] || "N/A",
             eps: overviewData["EPS"] || "N/A",
+            volume: latestData["5. volume"] || "N/A",
+            dayHigh: latestData["2. high"] || "N/A",
+            dayLow: latestData["3. low"] || "N/A",
+            exchange,
+            currency,
+            country,
+            dividendPerShare,
         });
     } catch (error) {
         console.error("Error fetching stock data:", error.message);
         res.status(500).json({ error: "Error fetching stock data" });
     }
 };
-
 
 
 const getCurrentPrice = async (req, res) => {

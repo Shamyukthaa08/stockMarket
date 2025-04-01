@@ -1,0 +1,4 @@
+yfinance==0.2.36
+scikit-learn==1.4.0
+tensorflow==2.15.0  # or keras if you're using standalone
+pandas==2.0.3

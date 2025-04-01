@@ -2,7 +2,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const { connectDB } = require('./models/config');
 const authRoutes = require('./routes/auth');
-const stockRoute = require('./routes/stockRoute')
+const stockRoute = require('./routes/stockRoute');
+const pythonRoute = require('./routes/pythonRoute');
 const cors = require('cors');
 
 
@@ -20,6 +21,7 @@ app.use(cookieParser());
 
 app.use('/api/auth',authRoutes);
 app.use('/api/stock',stockRoute);
+app.use('/api/python',pythonRoute);
 
 app.listen(PORT, () => {
     connectDB();
